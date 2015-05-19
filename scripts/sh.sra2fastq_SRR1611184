@@ -1,0 +1,6 @@
+#!/bin/bash
+# Convert .sra file into fastq format, separating read 1 and read 2
+# into two files, and gzip'ing to save space
+
+fastq-dump -I --split-3 --gzip SRR1611184 > sra2fastq_SRR1611184.out 2> sra2fastq_SRR1611184.err
+

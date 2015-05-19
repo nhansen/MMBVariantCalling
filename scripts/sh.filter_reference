@@ -1,0 +1,5 @@
+#!/bin/bash
+# Specify output fasta as an "mfa", or "multi-FASTA" file:
+
+prepare_reference_fasta.pl --build hg38 --input hg38.fa.gz --output hg38.mfa
+

@@ -50,8 +50,7 @@ while (<$fh>) {
     $entry =~ s/\n>//;
     $entry =~ s/>//;
     my ($desc_line, $sequence) = split /\n/, $entry, 2;
-    $desc_line =~ s/\s+//;
-    $desc_line =~ s/\s+(.+)//;
+    my ($desc, $remainder) = ($desc_line =~ /^(\S+)\s+(.*)$/) ? ($1, $2) : ($desc_line, '');
     $sequence =~ s/\n//g;
     my $length = length($sequence);
 
@@ -59,15 +58,15 @@ while (<$fh>) {
     # skip entries with "alt" or "hap" in their names (case insensitive)
 
     if (($ra_alt_seqs->{$build} && 
-            grep {$_ eq $desc_line} @{$ra_alt_seqs->{$build}}) ||
-            (!$ra_alt_seqs->{$build} && ($desc_line =~ /alt/ || 
-            $desc_line =~ /hap/i))) {
+            grep {$_ eq $desc} @{$ra_alt_seqs->{$build}}) ||
+            (!$ra_alt_seqs->{$build} && ($desc =~ /alt/ || 
+            $desc =~ /hap/i))) {
         next;
     }
 
     if (($build) && $ra_par_coords->{$build} && 
-              $ra_par_coords->{$build}->{$desc_line}) {
-        foreach my $ra_coord (@{$ra_par_coords->{$build}->{$desc_line}}) {
+              $ra_par_coords->{$build}->{$desc}) {
+        foreach my $ra_coord (@{$ra_par_coords->{$build}->{$desc}}) {
             my ($start, $end) = @{$ra_coord};
 
             my $nlength = $end - $start + 1;

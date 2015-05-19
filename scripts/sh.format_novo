@@ -1,0 +1,7 @@
+#!/bin/bash
+# Format an hg38 index for novoalign
+# Note: the file hg38.mfa has had alternate haplotypes removed and PAR regions
+#       masked from the Y chromosome using "prepare_reference_fasta.pl"
+
+novoindex -n hg38 hg38.ndx hg38.mfa # requires 8Gb of mem for human builds
+
