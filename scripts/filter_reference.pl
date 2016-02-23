@@ -187,6 +187,11 @@ This option specifies the path to a FASTA-formatted file of reference sequences.
 
 This option specifies the path to the filtered FASTA file that will be created.
 
+=item B<--linelength> I<length>
+
+This option specifies the length of the lines containing sequence to print in FASTA
+format.
+
 =back
 
 =head1 OUTPUT
