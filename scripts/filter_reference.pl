@@ -41,9 +41,9 @@ $/ = "\n>";
 my $inputstring = ($input =~ /\.gz$/) ? "gunzip -c $input | " : $input;
 my $fh = FileHandle->new($inputstring)
     or die "Couldn\'t open $input for reading: $!\n";
-my $outputstring = ($output =~ /\.gz$/) ? "| gzip -c > $output " : $output;
+my $outputstring = ($output =~ /\.gz$/) ? "| gzip -c > $output " : ">$output";
 my $outfh = FileHandle->new($outputstring)
-    or die "Couldn\'t open $output for reading: $!\n";
+    or die "Couldn\'t open $output for writing: $!\n";
 
 while (<$fh>) {
     my $entry = $_;
@@ -77,7 +77,7 @@ while (<$fh>) {
         }
     }
 
-    print_fasta($outfh, $desc_line, $sequence);
+    print_fasta($outfh, $desc_line, $sequence, $Opt{linelength});
     print STDERR "Wrote $desc_line (length $length)\n";
 }
 
@@ -88,10 +88,10 @@ sub process_commandline {
     
     # Set defaults here
     %Opt = ( 
-             
+               linelength => 50 
            );
     GetOptions(\%Opt, qw(
-                build=s input=s output=s help+ version verbose
+                build=s input=s output=s linelength=i help+ version verbose
                )) || pod2usage(0);
     if ($Opt{help})    { pod2usage(verbose => $Opt{help}); }
     if ($Opt{version}) { die "$0, ", q$Revision: $, "\n"; }
@@ -143,11 +143,13 @@ sub print_fasta {
     my $outfh = shift;
     my $displayid = shift;
     my $sequence = shift;
+    my $linelength = shift || 50;
 
     print $outfh ">$displayid\n";
 
     # fast reformat stolen from Bioperl:
-    my $formatted_seq = join("\n", unpack("(A50)*", $sequence))."\n";
+    my $formatstring = 'A'.$linelength;
+    my $formatted_seq = join("\n", unpack("($formatstring)*", $sequence))."\n";
     print $outfh $formatted_seq;
 }
 
